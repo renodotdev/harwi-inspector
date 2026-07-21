@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Surfaces */
+  --color-canvas: oklch(0.972 0.002 260);
+  --color-surface: #fff;
+  --color-surface-subtle: oklch(0.99 0.001 260);
+  --color-surface-muted: oklch(0.985 0.001 260);
+  --color-surface-sunken: oklch(0.97 0.002 260);
+  --color-surface-brand: oklch(0.985 0.012 70);
+  --color-header: oklch(0.99 0.002 260);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Text */
+  --color-ink: oklch(0.24 0.01 260);
+  --color-ink-body: oklch(0.28 0.01 260);
+  --color-ink-soft: oklch(0.3 0.01 260);
+  --color-ink-strong: oklch(0.35 0.01 260);
+  --color-ink-label: oklch(0.45 0.01 260);
+  --color-ink-muted: oklch(0.5 0.01 260);
+  --color-ink-subtle: oklch(0.55 0.01 260);
+  --color-ink-faint: oklch(0.6 0.01 260);
+  --color-ink-ghost: oklch(0.65 0.01 260);
+  --color-ink-placeholder: oklch(0.68 0.01 260);
+
+  /* Lines */
+  --color-line: oklch(0.9 0.004 260);
+  --color-line-strong: oklch(0.88 0.004 260);
+  --color-line-input: oklch(0.89 0.004 260);
+  --color-line-soft: oklch(0.95 0.003 260);
+  --color-line-faint: oklch(0.94 0.003 260);
+  --color-line-brand: oklch(0.88 0.05 68);
+  --color-track: oklch(0.92 0.004 260);
+
+  /* Brand — HarwiGadget orange (#F0A030) and the logo's charcoal.
+     `brand` is a fill colour: it is bright enough that white text on it fails
+     contrast, so anything sitting ON brand uses `ink`. For orange *text* on a
+     light surface use `brand-text`, which is darkened to stay legible. */
+  --color-brand: oklch(0.75 0.15 65);
+  --color-brand-strong: oklch(0.68 0.16 60);
+  --color-brand-text: oklch(0.52 0.14 52);
+  --color-brand-ink: oklch(0.58 0.13 60);
+  --color-brand-soft: oklch(0.96 0.03 70);
+  --color-brand-tint: oklch(0.94 0.05 70);
+  --color-brand-line: oklch(0.86 0.06 68);
+  --color-brand-edge: oklch(0.72 0.13 65);
+  --color-brand-accent: oklch(0.58 0.13 60);
+
+  /* Verdicts */
+  --color-pass: oklch(0.5 0.13 150);
+  --color-pass-soft: oklch(0.95 0.04 150);
+  --color-fail: oklch(0.53 0.17 25);
+  --color-fail-soft: oklch(0.96 0.05 25);
+  --color-fail-ink: oklch(0.5 0.16 25);
+  --color-na: oklch(0.45 0.01 260);
+  --color-na-soft: oklch(0.93 0.003 260);
+  --color-na-swatch: oklch(0.7 0.01 260);
+
+  /* Grades */
+  --color-grade-excellent: oklch(0.55 0.12 150);
+  --color-grade-good: oklch(0.55 0.11 220);
+  --color-grade-fair: oklch(0.62 0.12 75);
+  --color-grade-poor: oklch(0.55 0.16 25);
+
+  --color-scrim: oklch(0.2 0.01 260 / 0.5);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+::placeholder {
+  color: var(--color-ink-placeholder);
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 0;
+  border-color: transparent;
+}
+
+/* Print only the report card, edge to edge. */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printArea,
+  #printArea * {
+    visibility: visible !important;
+  }
+
+  #printArea {
+    position: absolute !important;
+    inset: 0 !important;
+    margin: 0 !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+
+  #printControls {
+    display: none !important;
+  }
+
+  #printScrim {
+    position: static !important;
+    background: #fff !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  #printBody {
+    max-height: none !important;
+    overflow: visible !important;
+  }
 }
