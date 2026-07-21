@@ -21,7 +21,7 @@ import { ConfirmDialog, type ConfirmRequest } from "./ConfirmDialog";
 import { Icon } from "./Icon";
 import { ReportOverlay } from "./InspectionReport";
 import { LocaleDate } from "./LocaleDate";
-import { Logo } from "./Logo";
+import { AppHeader } from "./AppHeader";
 import { Button, Card, CardHeading, LabeledInput } from "./ui";
 
 const GRADE_BUTTON =
@@ -125,82 +125,67 @@ export function InspectionForm({ initialDate }: { initialDate: string }) {
 
   return (
     <div className="min-h-screen pb-10 sm:pb-16">
-      <header className="z-20 border-b border-line bg-header/95 backdrop-blur-[8px] backdrop-saturate-[1.2] sm:sticky sm:top-0 sm:bg-header/85">
-        <div className="mx-auto flex max-w-[820px] flex-col gap-3 px-4 py-3 sm:px-5 sm:py-3.5">
-          <div className="flex flex-wrap items-center gap-3">
+      <AppHeader
+        sticky
+        logoHref={null}
+        left={
+          <Button
+            variant="ghost"
+            onClick={askLeave}
+            className="inline-flex shrink-0 items-center gap-1 px-2.5 sm:pr-4 sm:pl-2.5"
+            aria-label="Back to dashboard"
+          >
+            <Icon name="chevron-left" className="size-4" />
+            <span className="hidden sm:inline">Dashboard</span>
+          </Button>
+        }
+        actions={
+          <div className="flex gap-2">
             <Button
               variant="ghost"
-              onClick={askLeave}
-              className="inline-flex shrink-0 items-center gap-1 pr-4 pl-2.5"
-              aria-label="Back to dashboard"
+              onClick={askReset}
+              disabled={saving}
+              className="hidden sm:block"
             >
-              <Icon name="chevron-left" className="size-4" />
-              Dashboard
+              Reset
             </Button>
-            <span className="hidden h-7 w-px bg-line md:block" />
-            <div className="hidden items-center gap-3 md:flex">
-              <Logo href={null} />
-              <div>
-                <p className="m-0 text-[11px] font-bold uppercase tracking-[0.08em] text-ink-subtle">
-                  New inspection
-                </p>
-                <h1 className="m-0 text-[15px] font-bold tracking-[-0.01em] text-ink">
-                  Smartphone checklist
-                </h1>
-              </div>
+            <Button
+              variant="secondary"
+              onClick={() => dispatch({ type: "review" })}
+              className="hidden sm:block"
+            >
+              Review
+            </Button>
+            <Button onClick={askSave} disabled={saving}>
+              {saving ? "Saving…" : "Save"}
+            </Button>
+          </div>
+        }
+      >
+        <div className="mx-auto flex max-w-[820px] flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex min-w-0 flex-1 flex-col gap-[5px]">
+            <div className="flex justify-between text-xs font-semibold text-ink-muted">
+              <span>Checklist progress</span>
+              <span className="tabular-nums">
+                {decided}/{TOTAL_ITEMS} checked
+              </span>
             </div>
-
-            <div className="ml-auto flex gap-2 max-sm:w-full">
-              <Button
-                variant="ghost"
-                onClick={askReset}
-                disabled={saving}
-                className="max-sm:flex-1"
-              >
-                Reset
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => dispatch({ type: "review" })}
-                className="max-sm:flex-1"
-              >
-                Review
-              </Button>
-              <Button
-                onClick={askSave}
-                disabled={saving}
-                className="max-sm:flex-1"
-              >
-                {saving ? "Saving…" : "Save"}
-              </Button>
+            <div className="h-1.5 overflow-hidden rounded-full bg-track">
+              <div
+                className="h-full rounded-full bg-brand transition-[width] duration-250 ease-out"
+                style={{ width: `${progressPct}%` }}
+              />
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-line-soft pt-3 sm:flex-row sm:items-center sm:gap-4">
-            <div className="flex min-w-0 flex-1 flex-col gap-[5px]">
-              <div className="flex justify-between text-xs font-semibold text-ink-muted">
-                <span>Checklist progress</span>
-                <span className="tabular-nums">
-                  {decided}/{TOTAL_ITEMS} checked
-                </span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-track">
-                <div
-                  className="h-full rounded-full bg-brand transition-[width] duration-250 ease-out"
-                  style={{ width: `${progressPct}%` }}
-                />
-              </div>
-            </div>
-
-            <div className="flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-[9px] border border-line bg-surface px-[11px] py-1.5 text-xs font-semibold text-ink-muted">
-              <Icon name="calendar" className="size-[14px] text-brand-ink" />
-              <LocaleDate iso={draft.inspectionDate} />
-            </div>
+          <div className="flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-[9px] border border-line bg-surface px-[11px] py-1.5 text-xs font-semibold text-ink-muted">
+            <Icon name="calendar" className="size-[14px] text-brand-ink" />
+            <LocaleDate iso={draft.inspectionDate} />
           </div>
         </div>
 
         {error ? (
-          <div className="border-t border-fail/30 bg-fail-soft">
+          <div className="-mx-4 mt-3 border-t border-fail/30 bg-fail-soft sm:-mx-5">
             <p
               role="alert"
               className="mx-auto max-w-[820px] px-5 py-2.5 text-[13px] font-semibold text-fail"
@@ -209,9 +194,21 @@ export function InspectionForm({ initialDate }: { initialDate: string }) {
             </p>
           </div>
         ) : null}
-      </header>
+      </AppHeader>
 
       <main className="mx-auto flex max-w-[820px] flex-col gap-3 px-4 py-4 sm:gap-4 sm:px-5 sm:py-6">
+        <div className="mb-1">
+          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.1em] text-brand-ink">
+            Smartphone checklist
+          </p>
+          <h1 className="m-0 mt-1 text-[24px] font-extrabold tracking-[-0.025em] text-ink sm:text-[28px]">
+            New inspection
+          </h1>
+          <p className="m-0 mt-1 text-[13px] text-ink-subtle sm:text-sm">
+            Record the device identity, complete each check, then review and save.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <Card>
             <CardHeading
@@ -339,6 +336,15 @@ export function InspectionForm({ initialDate }: { initialDate: string }) {
         </Card>
 
         <div className="flex flex-col gap-3 sm:flex-row">
+          <Button
+            variant="ghost"
+            size="lg"
+            className="sm:hidden"
+            onClick={askReset}
+            disabled={saving}
+          >
+            Reset inspection
+          </Button>
           <Button
             variant="secondary"
             size="lg"

@@ -33,15 +33,22 @@ export function Logo({
   }, []);
 
   const mark = useImage ? (
-    /* eslint-disable-next-line @next/next/no-img-element -- intentionally a
-       plain <img> so the fallback can trigger; next/image errors on 404. */
-    <img
-      ref={detectMissing}
-      src={LOGO_SRC}
-      alt="HarwiGadget"
-      className={`${size === "large" ? "h-10 max-w-[180px] sm:h-12 sm:max-w-[280px]" : "h-9 max-w-[160px] sm:max-w-[220px]"} w-auto object-contain object-left`}
-      onError={() => setUseImage(false)}
-    />
+    <span
+      className={`${size === "large" ? "h-11 w-[148px] sm:h-12 sm:w-[164px]" : "h-9 w-[120px] sm:h-10 sm:w-[136px]"} relative block shrink-0 overflow-hidden`}
+    >
+      {/* The supplied logo has generous vertical canvas space. Cropping it in
+          the viewport keeps the source untouched while making the visible mark
+          an intentional size. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- intentionally a
+          plain <img> so the missing-asset fallback can trigger. */}
+      <img
+        ref={detectMissing}
+        src={LOGO_SRC}
+        alt="HarwiGadget"
+        className={`${size === "large" ? "w-[166px] sm:w-[184px]" : "w-[134px] sm:w-[152px]"} absolute top-1/2 left-1/2 h-auto max-w-none -translate-x-1/2 -translate-y-1/2`}
+        onError={() => setUseImage(false)}
+      />
+    </span>
   ) : (
     <Wordmark tagline={tagline} size={size} />
   );
@@ -49,7 +56,11 @@ export function Logo({
   if (!href) return mark;
 
   return (
-    <Link href={href} className="flex shrink-0 items-center" aria-label="HarwiGadget — home">
+    <Link
+      href={href}
+      className="flex shrink-0 items-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+      aria-label="HarwiGadget — home"
+    >
       {mark}
     </Link>
   );

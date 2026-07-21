@@ -3,7 +3,7 @@ import { listInspections } from "@/lib/db/inspections";
 import { isSupabaseConfigured } from "@/lib/db/client";
 import type { InspectionSummary } from "@/lib/inspection";
 import { InspectionsTable } from "@/components/InspectionsTable";
-import { Logo } from "@/components/Logo";
+import { AppHeader } from "@/components/AppHeader";
 import { SetupNotice } from "@/components/SetupNotice";
 import { Button } from "@/components/ui";
 
@@ -24,25 +24,30 @@ export default async function Dashboard() {
 
   return (
     <div className="min-h-screen pb-16">
-      <header className="border-b border-line bg-header">
-        <div className="mx-auto flex max-w-[1100px] items-center gap-2.5 px-4 py-3 sm:gap-4 sm:px-5 sm:py-3.5">
-          <div className="mr-auto flex items-center gap-3">
-            <Logo tagline size="large" />
-            <span className="hidden h-7 w-px bg-line sm:block" />
-            <h1 className="m-0 hidden text-[15px] font-bold tracking-[-0.01em] text-ink-subtle sm:block">
-              Inspection History
-            </h1>
-          </div>
+      <AppHeader
+        actions={
           <Link href="/inspections/new" className="shrink-0">
             <Button className="px-3 sm:px-3.5">
               <span className="sm:hidden">+ New</span>
               <span className="hidden sm:inline">+ New inspection</span>
             </Button>
           </Link>
-        </div>
-      </header>
+        }
+      />
 
       <main className="mx-auto flex max-w-[1100px] flex-col gap-4 px-4 py-4 sm:px-5 sm:py-6">
+        <div className="mb-1">
+          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.1em] text-brand-ink">
+            Dashboard
+          </p>
+          <h1 className="m-0 mt-1 text-[24px] font-extrabold tracking-[-0.025em] text-ink sm:text-[28px]">
+            Inspection history
+          </h1>
+          <p className="m-0 mt-1 text-[13px] text-ink-subtle sm:text-sm">
+            Review saved device checks or start a new inspection.
+          </p>
+        </div>
+
         {!configured ? <SetupNotice /> : null}
 
         {loadError ? (
