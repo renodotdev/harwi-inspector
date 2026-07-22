@@ -4,6 +4,7 @@ import { localToday } from "@/lib/inspection";
 export const metadata = { title: "New inspection" };
 
 export default function NewInspection() {
-  // Seeds the form; InspectionForm shows it in the browser's own locale.
+  // Hydration-stable seed; InspectionForm reconciles it with browser-local
+  // "today" after mount.
   return <InspectionForm initialDate={localToday()} />;
 }

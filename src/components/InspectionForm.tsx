@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useReducer, useState, useTransition } from "react";
+import { useEffect, useMemo, useReducer, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   DEVICE_FIELDS,
@@ -38,6 +38,14 @@ export function InspectionForm({ initialDate }: { initialDate: string }) {
   const [confirmRequest, setConfirm] = useState<ConfirmRequest | null>(null);
   const [saving, startSaving] = useTransition();
   const router = useRouter();
+
+  // The server may still be on the previous UTC date while the inspector's
+  // local timezone has crossed midnight. Reconcile after hydration so a new
+  // inspection always defaults to the browser's calendar date.
+  useEffect(() => {
+    const today = localToday();
+    if (today !== initialDate) dispatch({ type: "setDate", date: today });
+  }, [initialDate]);
 
   const { draft } = state;
   const decided = Object.values(draft.results).filter((r) => r.verdict).length;
