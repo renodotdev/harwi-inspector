@@ -81,7 +81,7 @@ export function Button({
 
 // ---------------------------------------------------------------------------
 
-const INPUT =
+export const INPUT =
   "min-h-11 px-3 py-2.5 border border-line-strong rounded-[9px] text-sm bg-surface-subtle text-ink-body";
 
 export function LabeledInput({
@@ -89,16 +89,12 @@ export function LabeledInput({
   value,
   onChange,
   placeholder,
-  options,
-  listId,
   type = "text",
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  options?: string[];
-  listId?: string;
   type?: "text" | "date";
 }) {
   return (
@@ -109,16 +105,8 @@ export function LabeledInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        list={options?.length ? listId : undefined}
         className={INPUT}
       />
-      {options?.length ? (
-        <datalist id={listId}>
-          {options.map((opt) => (
-            <option key={opt} value={opt} />
-          ))}
-        </datalist>
-      ) : null}
     </label>
   );
 }

@@ -22,6 +22,7 @@ import { Icon } from "./Icon";
 import { ReportOverlay } from "./InspectionReport";
 import { LocaleDate } from "./LocaleDate";
 import { AppHeader } from "./AppHeader";
+import { Combobox } from "./Combobox";
 import { Button, Card, CardHeading, LabeledInput } from "./ui";
 
 const GRADE_BUTTON =
@@ -269,19 +270,30 @@ export function InspectionForm({ initialDate }: { initialDate: string }) {
         <Card>
           <CardHeading icon="info" title="Device identity" />
           <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-            {DEVICE_FIELDS.map((field) => (
-              <LabeledInput
-                key={field.key}
-                label={field.label}
-                placeholder={field.placeholder}
-                options={field.options}
-                listId={`${field.key}-list`}
-                value={draft.device[field.key]}
-                onChange={(value) =>
-                  dispatch({ type: "setDevice", key: field.key, value })
-                }
-              />
-            ))}
+            {DEVICE_FIELDS.map((field) =>
+              field.options?.length ? (
+                <Combobox
+                  key={field.key}
+                  label={field.label}
+                  placeholder={field.placeholder}
+                  options={field.options}
+                  value={draft.device[field.key]}
+                  onChange={(value) =>
+                    dispatch({ type: "setDevice", key: field.key, value })
+                  }
+                />
+              ) : (
+                <LabeledInput
+                  key={field.key}
+                  label={field.label}
+                  placeholder={field.placeholder}
+                  value={draft.device[field.key]}
+                  onChange={(value) =>
+                    dispatch({ type: "setDevice", key: field.key, value })
+                  }
+                />
+              ),
+            )}
           </div>
         </Card>
 
